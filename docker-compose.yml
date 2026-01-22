@@ -1,0 +1,35 @@
+services:
+  app:
+    image: bfgf:latest
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: bfgf-container
+    env_file:
+      - .env
+    expose:
+      - "6800" # Expose port 6800 to other containers and should match the .env and caddy config #
+    restart: always
+
+  echo:
+    image: hashicorp/http-echo:1.0
+    container_name: echo-service
+    command: ["-listen=:5678", "-text=Hello from /echo ✅"]
+    restart: always
+
+  caddy:
+    image: caddy:latest
+    container_name: bfgf-caddy-container
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+    restart: always
+volumes:
+  caddy_data:
+  caddy_config:

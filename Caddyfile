@@ -1,0 +1,21 @@
+localhost {
+	tls internal
+
+	# Block direct access to API-ish endpoints
+	@direct_api path /health /time
+	handle @direct_api {
+		respond "Use /api/*" 404
+	}
+
+	handle_path /api* {
+		reverse_proxy app:6800
+	}
+
+	handle_path /echo* {
+		reverse_proxy echo:5678
+	}
+
+	handle {
+		reverse_proxy app:6800
+	}
+}

@@ -1,0 +1,42 @@
+
+---
+
+# ✅ `.gitignore` (tight & correct)
+
+```gitignore
+# --- Environment ---
+.env
+.env.*
+!.env.example
+
+# --- Node.js ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- Docker ---
+*.log
+docker-compose.override.yml
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- IDEs ---
+.vscode/
+.idea/
+*.swp
+
+# --- Build output ---
+dist/
+build/
+
+# --- Caddy ---
+caddy_data/
+caddy_config/
+
+# --- Secrets / Keys ---
+*.pem
+*.key
+*.crt

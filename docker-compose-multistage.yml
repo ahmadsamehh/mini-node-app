@@ -1,0 +1,12 @@
+services:
+  app:
+    image: hamotha-app-multistage
+    build:
+      context: .
+      dockerfile: Dockerfile-multistage
+    container_name: hamotha-app-multistage-container
+    env_file:
+      - .env
+    ports:
+      - "6800:6800"
+    restart: always
