@@ -1,4 +1,4 @@
-# 🌊 Mini Node App
+# 🌊 Mini Node App (BFGF Edition)
 
 A sleek, containerized Node.js web application featuring a modern glassmorphic UI, Express routing, and a pre-configured Caddy reverse proxy.
 
@@ -7,7 +7,7 @@ A sleek, containerized Node.js web application featuring a modern glassmorphic U
 - **🎨 Modern UI**: Beautiful glassmorphism design with responsiveness and smooth animations.
 - **🛣️ Express Routing**: Cleanly structured routes including health checks and time endpoints.
 - **🐳 Docker Ready**: Includes `Dockerfile` (optimized multi-stage) and `docker-compose` for orchestration.
-- **🛡️ Caddy Reverse Proxy**: Integrated reverse proxy with rate limiting and TLS configuration.
+- **🛡️ Caddy Reverse Proxy**: Integrated reverse proxy with automated TLS and path handling.
 - **⚙️ Environment Driven**: Easy configuration via `.env` files.
 
 ## 🛠️ Tech Stack
@@ -53,15 +53,15 @@ A sleek, containerized Node.js web application featuring a modern glassmorphic U
 
 ### 🐳 Running with Docker
 
-You can spin up the entire stack (App + Caddy + Echo) using Docker Compose:
+You can spin up the entire stack using Docker Compose. This starts the Node.js app, a Caddy reverse proxy, and an echo service.
 
 ```bash
-docker-compose up --build
+docker-compose up -d --build
 ```
 
-- **App**: [https://localhost](https://localhost) (via Caddy)
-- **API**: [https://localhost/api](https://localhost/api)
-- **Echo Service**: [https://localhost/api/echo](https://localhost/api/echo)
+- **App Home**: [https://localhost](https://localhost)
+- **API Access**: [https://localhost/api/](https://localhost/api/)
+- **Echo Service**: [https://localhost/echo/](https://localhost/echo/)
 
 > [!NOTE]
 > Caddy is configured with `tls internal` for local development. You may need to accept the self-signed certificate in your browser.
@@ -71,20 +71,20 @@ docker-compose up --build
 | Endpoint | Description | Reverse Proxy Path |
 | :--- | :--- | :--- |
 | `GET /` | Home page | `/` or `/api/` |
-| `GET /ahmad` | Ahmad's personal page | `/ahmad` |
-| `GET /Hamotha` | Special tribute page | `/Hamotha` |
+| `GET /Boyfriend` | Boyfriend's personal page | `/Boyfriend` or `/api/Boyfriend` |
+| `GET /Girlfriend` | Special tribute page | `/Girlfriend` or `/api/Girlfriend` |
 | `GET /health` | Service health status | `/api/health` |
 | `GET /time` | Get current ISO time | `/api/time` |
-| `GET /echo` | Hashicorp Echo service | `/api/echo` |
+| `GET /echo` | Hashicorp Echo service | `/echo/` |
 
 ## 🏗️ Project Structure
 
 ```text
 .
-├── Caddyfile              # Reverse proxy & rate limit config
+├── Caddyfile              # Reverse proxy configuration
 ├── Dockerfile             # Basic Docker production build
 ├── Dockerfile-multistage  # Optimized multi-stage build
-├── docker-compose.yml     # Service orchestration
+├── docker-compose.yml     # Service orchestration (bfgf-container)
 ├── server.js              # Express application logic
 └── package.json           # Node.js dependencies
 ```
