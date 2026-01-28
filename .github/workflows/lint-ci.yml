@@ -1,4 +1,4 @@
-# Trigger the workflow on push and pull request to the main branch
+# Trigger the workflow on push to the main branch
 on:
   push:
     branches:
@@ -14,10 +14,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-
       - name: Execute Lint
         run: npm ci && npm run lint:ci
 
-    build:
-        needs: lint
-        uses: ./.github/workflows/build-push.yml
+  build:
+    needs: lint
+    uses: ./.github/workflows/build-push.yml
