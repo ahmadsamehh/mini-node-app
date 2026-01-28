@@ -66,6 +66,23 @@ docker-compose up -d --build
 > [!NOTE]
 > Caddy is configured with `tls internal` for local development. You may need to accept the self-signed certificate in your browser.
 
+## 🚀 CI/CD & Automation
+
+This project uses **GitHub Actions** to automate the build and deployment process. The workflow is defined in [.github/workflows/build-push.yml](file:///Users/ahmadsameh/Desktop/Work/Study/2026/mini-node-app/.github/workflows/build-push.yml).
+
+### Workflow Details
+- **Trigger**: Automatically runs on every `push` to the `main` branch.
+- **Actions**:
+  - Checkouts the repository.
+  - Sets up Docker Buildx for optimized builds.
+  - Logs into Docker Hub using encrypted secrets.
+  - Builds and pushes the production image to Docker Hub as `mini-node-app:latest`.
+
+### Required GitHub Secrets
+To use this workflow, add the following secrets to your GitHub repository (`Settings > Secrets and variables > Actions`):
+- `DOCKERHUB_USERNAME`: Your Docker Hub account name.
+- `DOCKERHUB_TOKEN`: A Docker Hub Personal Access Token (PAT).
+
 ## 📡 API Reference
 
 | Endpoint | Description | Reverse Proxy Path |
@@ -81,6 +98,7 @@ docker-compose up -d --build
 
 ```text
 .
+├── .github/workflows/     # CI/CD pipeline definitions
 ├── Caddyfile              # Reverse proxy configuration
 ├── Dockerfile             # Basic Docker production build
 ├── Dockerfile-multistage  # Optimized multi-stage build
