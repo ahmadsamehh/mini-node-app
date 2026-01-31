@@ -154,6 +154,12 @@ app.get("/time", (req, res) => {
   });
 });
 
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
+
 app.get("/Girlfriend", (req, res) => {
   const extraCss = `
     .love {
