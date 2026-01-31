@@ -57,8 +57,7 @@ jobs:
                   password: ${{ secrets.DOCKERHUB_TOKEN }}
 
             - name: push the docker image
-              uses: docker/build-push-action@v6
-              with:
-                  context: .
-                  push: true
-                  tags: ${{ secrets.DOCKERHUB_USERNAME }}/mini-node-app:latest
+              run: |
+                  docker tag mini-node-app:latest ${{ secrets.DOCKERHUB_USERNAME }}/mini-node-app:latest
+                  docker push ${{ secrets.DOCKERHUB_USERNAME }}/mini-node-app:latest
+
