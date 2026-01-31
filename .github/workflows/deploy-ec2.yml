@@ -1,0 +1,52 @@
+name: Deploy to EC2
+on:
+    workflow_call:
+        secrets:
+            EC2_SSH_KEY:
+                required: true
+            EC2_HOST:
+                required: true
+            EC2_USER:
+                required: true
+            DOCKERHUB_USERNAME:
+                required: true
+            DOCKERHUB_TOKEN:
+                required: true
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up SSH
+              run: |
+                mkdir -p ~/.ssh
+                echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+                chmod 600 ~/.ssh/id_rsa
+                ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+                  
+
+            - name: Upload docker-composes.yml to EC2
+              run: |
+                    scp deploy/docker-compose.yml \
+                            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/opt/mini-node-app/docker-compose.yml
+
+            - name: Write .env file to EC2
+              run: |
+                    ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+                    cat > /opt/mini-node-app/.env << ENV
+                    PORT=6800
+                    NODE_ENV=production
+                    ENV
+                    EOF
+
+            - name: Deploy (pull and restart) on EC2
+              run: |
+                    ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+                    set -e
+                    cd /opt/mini-node-app
+                    docker-compose pull
+                    docker-compose up -d
+                    docker ps --filter "name=mini-node-app"
+                    EOF

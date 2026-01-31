@@ -143,10 +143,6 @@ app.get("/Boyfriend", (req, res) => {
   res.send(pageTemplate({ title: "Boyfriend", bodyHtml }));
 });
 
-app.get("/health", (req, res) => {
-  res.status(200).json({ status: "ok" });
-});
-
 app.get("/time", (req, res) => {
   res.json({
     time: new Date().toISOString(),
