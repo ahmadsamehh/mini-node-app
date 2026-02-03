@@ -16,9 +16,9 @@ jobs:
                 ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
                   
 
-            - name: Upload docker-composes.yml to EC2
+            - name: Upload docker-composee.yml to EC2
               run: |
-                    scp deploy/docker-compose.yml \
+                    scp deploy/docker-composee.yml \
                             ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/opt/mini-node-app/docker-compose.yml
 
             - name: Write .env file to EC2
