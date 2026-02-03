@@ -35,7 +35,7 @@ jobs:
                     ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
                     set -e
                     cd /opt/mini-node-app
-                    docker-compose pull
-                    docker-compose up -d
+                    docker compose pull
+                    docker compose up -d
                     docker ps --filter "name=mini-node-app"
                     EOF
