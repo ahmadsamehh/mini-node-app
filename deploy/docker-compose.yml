@@ -1,15 +1,24 @@
 services:
   app:
-    image: bfgf:latest
-    build: 
-      context: .
-      dockerfile: Dockerfile
+    image: ahmadsamehh/mini-node-app:latest
     container_name: bfgf-container
     env_file:
       - .env
     expose:
       - "6800" # Expose port 6800 to other containers and should match the .env and caddy config #
     restart: always
+    
+  # app:
+  #   image: bfgf:latest
+  #   build: 
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: bfgf-container
+  #   env_file:
+  #     - .env
+  #   expose:
+  #     - "6800" # Expose port 6800 to other containers and should match the .env and caddy config #
+  #   restart: always
 
   echo:
     image: hashicorp/http-echo:1.0
