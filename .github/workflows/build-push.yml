@@ -60,8 +60,3 @@ jobs:
               run: |
                   docker tag mini-node-app:latest ${{ secrets.DOCKERHUB_USERNAME }}/mini-node-app:latest
                   docker push ${{ secrets.DOCKERHUB_USERNAME }}/mini-node-app:latest
-
-    deploy:
-      needs: build-and-push
-      uses: ./.github/workflows/deploy-ec2.yml
-      secrets: inherit

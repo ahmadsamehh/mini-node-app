@@ -3,6 +3,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'deploy/**'
+      - 'server.js'
+      - 'package.json'
+      - 'package-lock.json'
 jobs:
   lint:
     runs-on: ubuntu-latest

@@ -1,17 +1,6 @@
 name: Deploy to EC2
 on:
-    workflow_call:
-        secrets:
-            EC2_SSH_KEY:
-                required: true
-            EC2_HOST:
-                required: true
-            EC2_USER:
-                required: true
-            DOCKERHUB_USERNAME:
-                required: true
-            DOCKERHUB_TOKEN:
-                required: true
+    workflow_dispatch:
 jobs:
     deploy:
         runs-on: ubuntu-latest
