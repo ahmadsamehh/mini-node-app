@@ -30,8 +30,8 @@ jobs:
               "set -e",
               "cd /home/ubuntu/mini-node-app || exit 1",
               "docker container rm -f zebby >/dev/null 2>&1 || true",
-              "docker compose pull -d",
-              "docker compose up -d",
+              "docker compose pull",
+              "docker compose up -d --force-recreate  ",
               "sleep 2",
               "docker ps --filter name=bf-gf-container --format \"{{.Names}}: {{.Status}}\"",
             ]' \
