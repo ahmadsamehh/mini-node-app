@@ -28,7 +28,7 @@ jobs:
             --instance-ids "${{ secrets.SSM_INSTANCE_ID }}" \
             --parameters commands='[
               "set -e",
-              "cd mini-node-app || exit 1",
+              "cd /home/ubuntu/mini-node-app || exit 1",
               "docker container rm -f zebby >/dev/null 2>&1 || true",
               "docker compose pull -d",
               "docker compose up -d",
