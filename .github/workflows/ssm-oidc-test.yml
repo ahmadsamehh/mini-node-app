@@ -28,12 +28,12 @@ jobs:
             --instance-ids "${{ secrets.SSM_INSTANCE_ID }}" \
             --parameters commands='[
               "set -e",
-              "docker pull ahmadsamehh/mini-node-app:latest",
-              "docker rm -f zebby >/dev/null 2>&1 || true",
-              "docker run -d -p 6800:6800 --name zebby ahmadsamehh/mini-node-app:latest",
+              "cd mini-node-app || exit 1",
+              "docker container rm -f zebby >/dev/null 2>&1 || true",
+              "docker compose pull -d",
+              "docker compose up -d",
               "sleep 2",
-              "docker ps --filter name=zebby",
-              "docker logs --tail 100 zebby || true"
+              "docker ps --filter name=bf-gf-container --format \"{{.Names}}: {{.Status}}\"",
             ]' \
             --query "Command.CommandId" \
             --output text)
