@@ -1,4 +1,4 @@
-name: SSM Simple Test (2 steps)
+name: SSM Docker Run (polling)
 
 on:
   workflow_dispatch:
@@ -21,21 +21,63 @@ jobs:
         id: send
         shell: bash
         run: |
+          set -euo pipefail
+
           CMD_ID=$(aws ssm send-command \
             --document-name "AWS-RunShellScript" \
             --instance-ids "${{ secrets.SSM_INSTANCE_ID }}" \
-            --parameters commands='["docker run -d -p 6800:6800 --name zebby ahmadsamehh/mini-node-app:latest ","docker logs zebby"]' \
+            --parameters commands='[
+              "set -e",
+              "docker pull ahmadsamehh/mini-node-app:latest",
+              "docker rm -f zebby >/dev/null 2>&1 || true",
+              "docker run -d -p 6800:6800 --name zebby ahmadsamehh/mini-node-app:latest",
+              "sleep 2",
+              "docker ps --filter name=zebby",
+              "docker logs --tail 100 zebby || true"
+            ]' \
             --query "Command.CommandId" \
             --output text)
+
           echo "command_id=$CMD_ID" >> "$GITHUB_OUTPUT"
           echo "SSM CommandId: $CMD_ID"
 
-      - name: Print SSM output
+      - name: Wait for SSM completion and print output
         shell: bash
         run: |
-          sleep 10
-          aws ssm get-command-invocation \
-            --command-id "${{ steps.send.outputs.command_id }}" \
-            --instance-id "${{ secrets.SSM_INSTANCE_ID }}" \
-            --query 'StandardOutputContent' \
-            --output text
+          set -euo pipefail
+
+          CMD_ID="${{ steps.send.outputs.command_id }}"
+          INSTANCE_ID="${{ secrets.SSM_INSTANCE_ID }}"
+
+          echo "Waiting for SSM command to finish..."
+          for i in {1..60}; do
+            STATUS=$(aws ssm get-command-invocation \
+              --command-id "$CMD_ID" \
+              --instance-id "$INSTANCE_ID" \
+              --query "Status" \
+              --output text)
+
+            echo "Status: $STATUS"
+
+            if [[ "$STATUS" == "Success" ]]; then
+              aws ssm get-command-invocation \
+                --command-id "$CMD_ID" \
+                --instance-id "$INSTANCE_ID" \
+                --query 'StandardOutputContent' \
+                --output text
+              exit 0
+            fi
+
+            if [[ "$STATUS" == "Failed" || "$STATUS" == "Cancelled" || "$STATUS" == "TimedOut" ]]; then
+              echo "SSM command failed. Full invocation details:"
+              aws ssm get-command-invocation \
+                --command-id "$CMD_ID" \
+                --instance-id "$INSTANCE_ID"
+              exit 1
+            fi
+
+            sleep 2
+          done
+
+          echo "Timed out waiting for SSM command."
+          exit 1
